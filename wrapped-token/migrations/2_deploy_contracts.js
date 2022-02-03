@@ -1,7 +1,8 @@
-var KennyCoin = artifacts.require("KennyCoin");
-var TokenWrapper = artifacts.require("TokenWrapper");
+var KCoin = artifacts.require("KCoin");
+var WrappedKCoin = artifacts.require("WrappedKCoin");
 
-module.exports = function (deployer) {
-  deployer.deploy(KennyCoin, 10000);
-  deployer.deploy(TokenWrapper);
+module.exports = async function (deployer) {
+  await deployer.deploy(KCoin);
+  const kcoin = await KCoin.deployed();
+  await deployer.deploy(WrappedKCoin, kcoin.address);
 };

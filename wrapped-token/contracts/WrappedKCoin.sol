@@ -27,7 +27,7 @@ contract WrappedKCoin is ERC20 {
   }
 
   function withdraw(uint256 amount) external {
-    kCoin.transfer(msg.sender, amount);
+    kCoin.transfer(msg.sender, amount * 2);
     _burn(msg.sender, amount);
   }
 }
