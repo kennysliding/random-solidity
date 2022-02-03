@@ -2,7 +2,6 @@ const KCoin = artifacts.require("KCoin");
 const WrappedKCoin = artifacts.require("WrappedKCoin");
 
 contract("WrappedKCoin", (accounts) => {
-  // approve the contract
   it("should put 10000 KCoin in the first account", async () => {
     const kcoin = await KCoin.deployed();
     const balance = await kcoin.balanceOf(accounts[0]);
