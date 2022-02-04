@@ -10,9 +10,9 @@ contract Timelocker {
     bool released;
   }
   ERC20 immutable _timeCoin;
-  mapping(address => Locker[]) _lockers;
+  mapping(address => Locker[]) private _lockers;
 
-  constructor(address timeCoin) public {
+  constructor(address timeCoin) {
     _timeCoin = ERC20(timeCoin);
   }
 
@@ -30,7 +30,6 @@ contract Timelocker {
     uint256 amount
   ) public {
     _timeCoin.transferFrom(msg.sender, address(this), amount);
-    uint256 newLockerId = _lockers[recipent].length;
     Locker memory newLocker = Locker({
       releaseTime: releaseTime,
       amount: amount,
