@@ -5,20 +5,10 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract WrappedKCoin is ERC20 {
   ERC20 kCoin;
-  mapping(address => uint256) allowances;
+  mapping(address => mapping(address => uint256)) allowances;
 
-  constructor(address ERC20TokenAddress) public ERC20("KWrapped", "KWR") {
+  constructor(address ERC20TokenAddress) ERC20("KWrapped", "KWR") {
     kCoin = ERC20(ERC20TokenAddress);
-  }
-
-  function approve(address spender, uint256 amount)
-    public
-    override
-    returns (bool)
-  {
-    kCoin.approve(address(this), amount);
-    allowances[msg.sender] = amount;
-    return true;
   }
 
   function deposit(uint256 amount) external payable {
