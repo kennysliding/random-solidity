@@ -9,11 +9,11 @@ contract Timelocker {
     uint256 amount;
     bool released;
   }
-  ERC20 immutable _timeCoin;
-  mapping(address => Locker[]) private _lockers;
+  ERC20 private immutable _token;
+  mapping(address => Locker[]) _lockers;
 
-  constructor(address timeCoin) {
-    _timeCoin = ERC20(timeCoin);
+  constructor(address tokenAddress) {
+    _token = ERC20(tokenAddress);
   }
 
   function getCurrentBlockTime() external view returns (uint256) {
@@ -29,7 +29,7 @@ contract Timelocker {
     uint256 releaseTime,
     uint256 amount
   ) public {
-    _timeCoin.transferFrom(msg.sender, address(this), amount);
+    _token.transferFrom(msg.sender, address(this), amount);
     Locker memory newLocker = Locker({
       releaseTime: releaseTime,
       amount: amount,
@@ -58,7 +58,7 @@ contract Timelocker {
       _lockers[msg.sender][lockerId].released == false,
       "Already been released"
     );
-    _timeCoin.transfer(msg.sender, _lockers[msg.sender][lockerId].amount);
+    _token.transfer(msg.sender, _lockers[msg.sender][lockerId].amount);
     _lockers[msg.sender][lockerId].released = true;
   }
 }
