@@ -10,18 +10,10 @@ contract Timelocker {
     bool released;
   }
   ERC20 private immutable _token;
-  mapping(address => Locker[]) _lockers;
+  mapping(address => Locker[]) public lockers;
 
   constructor(address tokenAddress) {
     _token = ERC20(tokenAddress);
-  }
-
-  function getCurrentBlockTime() external view returns (uint256) {
-    return block.timestamp;
-  }
-
-  function getLockers() external view returns (Locker[] memory) {
-    return _lockers[msg.sender];
   }
 
   function deposit(
@@ -35,7 +27,7 @@ contract Timelocker {
       amount: amount,
       released: false
     });
-    _lockers[recipent].push(newLocker);
+    lockers[recipent].push(newLocker);
   }
 
   function deposits(
@@ -49,16 +41,10 @@ contract Timelocker {
   }
 
   function release(uint256 lockerId) external {
-    require(_lockers[msg.sender].length >= lockerId, "Locker does not exist");
-    require(
-      _lockers[msg.sender][lockerId].releaseTime <= block.timestamp,
-      "Not yet can release"
-    );
-    require(
-      _lockers[msg.sender][lockerId].released == false,
-      "Already been released"
-    );
-    _token.transfer(msg.sender, _lockers[msg.sender][lockerId].amount);
-    _lockers[msg.sender][lockerId].released = true;
+    require(lockers[msg.sender].length >= lockerId);
+    require(lockers[msg.sender][lockerId].releaseTime <= block.timestamp);
+    require(lockers[msg.sender][lockerId].released == false);
+    _token.transfer(msg.sender, lockers[msg.sender][lockerId].amount);
+    lockers[msg.sender][lockerId].released = true;
   }
 }

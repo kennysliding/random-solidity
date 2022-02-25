@@ -1,5 +1,8 @@
-const Migrations = artifacts.require("Migrations");
+var TimeCoin = artifacts.require("TimeCoin");
+var Timelocker = artifacts.require("Timelocker");
 
-module.exports = function (deployer) {
-  deployer.deploy(Migrations);
+module.exports = async function (deployer) {
+  await deployer.deploy(TimeCoin);
+  const timeCoin = await TimeCoin.deployed();
+  await deployer.deploy(Timelocker, timeCoin.address);
 };
