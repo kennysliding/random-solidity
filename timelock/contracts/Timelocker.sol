@@ -9,11 +9,11 @@ contract Timelocker {
     uint256 amount;
     bool released;
   }
-  ERC20 private immutable _token;
+  ERC20 public immutable token;
   mapping(address => Locker[]) public lockers;
 
   constructor(address tokenAddress) {
-    _token = ERC20(tokenAddress);
+    token = ERC20(tokenAddress);
   }
 
   function deposit(
@@ -21,7 +21,7 @@ contract Timelocker {
     uint256 releaseTime,
     uint256 amount
   ) public {
-    _token.transferFrom(msg.sender, address(this), amount);
+    token.transferFrom(msg.sender, address(this), amount);
     Locker memory newLocker = Locker({
       releaseTime: releaseTime,
       amount: amount,
@@ -44,7 +44,7 @@ contract Timelocker {
     require(lockers[msg.sender].length >= lockerId);
     require(lockers[msg.sender][lockerId].releaseTime <= block.timestamp);
     require(lockers[msg.sender][lockerId].released == false);
-    _token.transfer(msg.sender, lockers[msg.sender][lockerId].amount);
+    token.transfer(msg.sender, lockers[msg.sender][lockerId].amount);
     lockers[msg.sender][lockerId].released = true;
   }
 }
